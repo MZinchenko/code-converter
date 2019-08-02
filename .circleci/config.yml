@@ -37,6 +37,8 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+      - run: mvn clean package
+
       - store_artifacts:
           path: /target/code-converter.jar
           destination: code-converter.jar

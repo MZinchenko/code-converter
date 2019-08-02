@@ -40,5 +40,5 @@ jobs:
       - run: mvn clean package
 
       - store_artifacts:
-          path: /target/code-converter.jar
+          path: target/code-converter.jar
           destination: code-converter.jar

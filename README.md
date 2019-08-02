@@ -1,5 +1,5 @@
-# code-converter
-Clipboard code converter for http://habr.com.
+# Code snippet converter IntelliJ IDEA => http://habr.com.
+Clipboard snippet code converter for http://habr.com.
 
 Transforms code from usual html IntelliJ IDEA format into special _habr.com_ format.  
 

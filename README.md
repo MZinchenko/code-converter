@@ -6,5 +6,5 @@ Transforms code from usual html IntelliJ IDEA format into special _habr.com_ for
 **Usage:**
 * Select code region in IntelliJ IDEA
 * Press Ctrl-C (Copy)
-* Run code-converter.jar
+* Run `java -jar code-converter.jar`
 * Press Ctrl-V (Paste)

@@ -3,6 +3,7 @@ package com.habr.codeconverter
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
+import java.awt.datatransfer.UnsupportedFlavorException
 import java.io.InputStream
 
 val HTML_FLAVOR = DataFlavor("text/html", "Rich Formatted Text")
@@ -13,21 +14,55 @@ val color = Regex("[\";]color:#(.*?)[\";]")
 val styleItalic = Regex("(font-style:italic)")
 val styleBold = Regex("(font-weight:bold)")
 
-fun main() {
-  val cb = Toolkit.getDefaultToolkit().systemClipboard
-  val source = (cb.getData(HTML_FLAVOR) as InputStream).reader().readText()
-  println(source)
-  StringSelection(
-    "<code>" +
-      source.substring(pre)!!
-        .replace(span) {
-          it.groups[2]!!.value.styledWith(it.groups[1]!!.value)
-        }
-        .replace("<br>", "\n")
-        .replace("&#32;", "&nbsp;")
-      + "</code>"
-  ).let { cb.setContents(it, it) }
+val clipboard = Toolkit.getDefaultToolkit().systemClipboard!!
+val clipboardHtml
+  get() =
+    try {
+      clipboard.getData(HTML_FLAVOR)
+    } catch (e: UnsupportedFlavorException) {
+      null
+    }
+      ?.let { it as? InputStream }
+      ?.reader()
+      ?.readText()
+
+fun main(vararg args: String) =
+  if (args.isNotEmpty()) {
+    println("Running as daemon")
+    clipboard.addFlavorListener {
+      convertClipboard()
+    }.also {
+      Thread.currentThread().suspend()
+    }
+  } else
+    convertClipboard()
+
+private fun convertClipboard() {
+  clipboardHtml
+    ?.also {
+      // debug only
+      println("Source clipboard data as html:\n$it")
+    }
+    ?.convertCode()
+    ?.putIntoClipboard()
 }
+
+private fun String.convertCode() =
+  substring(pre)
+    ?.replace(span) { span -> span.groups[2]!!.value.styledWith(span.groups[1]!!.value) }
+    ?.replaceTags()
+    ?.wrapWithCode()
+
+private fun String.putIntoClipboard() =
+  StringSelection(this)
+    .let { clipboard.setContents(it, it) }
+
+private fun String.wrapWithCode() =
+  "<code>$this</code>"
+
+private fun String.replaceTags() =
+  replace("<br>", "\n")
+    .replace("&#32;", "&nbsp;")
 
 private fun String.styledWith(style: String) =
   styledWith(

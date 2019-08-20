@@ -75,7 +75,7 @@ private fun String.popupBr() =
     .replace(uselessFont, "$1")
 
 private fun String.replaceTags() =
-    replace("<br>", "\n")
+  replace("<br>", "\n")
     .replace("&#32;", "&nbsp;")
 
 private fun String.styledWith(style: String) =

@@ -13,6 +13,8 @@ val span = Regex("<span (.*?)>(.*?)</span>")
 val color = Regex("[\";]color:#(.*?)[\";]")
 val styleItalic = Regex("(font-style:italic)")
 val styleBold = Regex("(font-weight:bold)")
+val emptyFont = Regex("<font[^>]*?></font>")
+val uselessFont = Regex("<font[^>]*?>((&#32;)+)</font>")
 
 val clipboard = Toolkit.getDefaultToolkit().systemClipboard!!
 val clipboardHtml
@@ -50,6 +52,7 @@ private fun convertClipboard() {
 private fun String.convertCode() =
   substring(pre)
     ?.replace(span) { span -> span.groups[2]!!.value.styledWith(span.groups[1]!!.value) }
+    ?.popupBr()
     ?.replaceTags()
     ?.wrapWithCode()
 
@@ -60,8 +63,19 @@ private fun String.putIntoClipboard() =
 private fun String.wrapWithCode() =
   "<code>$this</code>"
 
+private fun String.popupBr() =
+  // popup <br> from any style tags
+  replace("<br></b>", "</b><br>")
+    .replace("<br></i>", "</i><br>")
+    .replace("<br></font>", "</font><br>")
+    // useless style removing (minification)
+    .replace("<b></b>", "")
+    .replace("<i></i>", "")
+    .replace(emptyFont, "")
+    .replace(uselessFont, "$1")
+
 private fun String.replaceTags() =
-  replace("<br>", "\n")
+    replace("<br>", "\n")
     .replace("&#32;", "&nbsp;")
 
 private fun String.styledWith(style: String) =

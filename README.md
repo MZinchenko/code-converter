@@ -5,17 +5,14 @@ Transforms code from usual html IntelliJ IDEA format into special _habr.com_ for
 
 **Usage:**
 * Single run mode
-    * Select code region in IntelliJ IDEA
-    * Press Ctrl-C (Copy)
+    * Select code region in IntelliJ IDEA and press Ctrl-C (Copy)
     * Run `java -jar code-converter.jar`
-    * Press Ctrl-V (Paste)
+    * Goto habr.com page editor and press Ctrl-V (Paste)
     
 * Daemon mode
     * Run `java -jar code-converter.jar daemon`
-    * Select code region in IntelliJ IDEA
-    * Press Ctrl-C (Copy)
-    * Press Ctrl-V (Paste)
-    * Select code region in IntelliJ IDEA
-    * Press Ctrl-C (Copy)
-    * Press Ctrl-V (Paste)
+    * Select code region in IntelliJ IDEA and press Ctrl-C (Copy)
+    * Goto habr.com page editor and press Ctrl-V (Paste)
+    * Select code region in IntelliJ IDEA and press Ctrl-C (Copy)
+    * Goto habr.com page editor and press Ctrl-V (Paste)~~~~
     ...    
